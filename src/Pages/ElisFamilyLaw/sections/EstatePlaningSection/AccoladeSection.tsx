@@ -149,8 +149,12 @@ export const AccoladeSection = (): JSX.Element => {
             ))}
           </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button className="h-auto rounded-none bg-ellis-camel-leather px-[27px] py-[17px] text-[#16181f] hover:bg-ellis-camel-leather/90">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
+          >
+            <Button className="h-auto w-full rounded-none bg-ellis-camel-leather px-[27px] py-[17px] text-[#16181f] hover:bg-ellis-camel-leather/90 sm:w-auto">
               MEET ALL ATTORNEYS
               <motion.span whileHover={{ x: 6 }}>
                 <ArrowRightIcon className="h-4 w-4" />
@@ -194,13 +198,17 @@ export const AccoladeSection = (): JSX.Element => {
               </motion.p>
             ))}
 
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button className="h-auto rounded-none bg-ellis-camel-leather px-[27px] py-[17px] text-[#16181f] hover:bg-ellis-camel-leather/90">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
+            >
+              <Button className="h-auto w-full rounded-none bg-ellis-camel-leather px-[27px] py-[17px] text-[#16181f] hover:bg-ellis-camel-leather/90 sm:w-auto">
                 LEARN MORE ABOUT US
                 <motion.span whileHover={{ x: 6 }}>
                   <ArrowRightIcon className="h-4 w-4" />
                 </motion.span>
-              </Button>
+            </Button>
             </motion.div>
           </div>
         </div>

@@ -16,6 +16,10 @@ const navItems = [
 ];
 
 const scrollTo = (id: string) => {
+  if (id === "home") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
   const el = document.getElementById(id);
   if (el) {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -36,17 +40,13 @@ export const NavigationBarSection = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    // FIX 1: Broadened selector from "section[id]" to "[id]"
-    // so <footer id="footer">, <div id="...">, etc. are all observed
     const sections = document.querySelectorAll("[id]");
 
-    // FIX 2: Set the first section as active on initial load
     const firstSection = document.querySelector("[id]") as HTMLElement | null;
     if (firstSection) setActiveSection(firstSection.id);
 
     const observerOptions = {
       root: null,
-      // FIX 3: Slightly loosened rootMargin for a better "feel"
       rootMargin: "-10% 0px -50% 0px",
       threshold: 0,
     };
@@ -62,6 +62,13 @@ export const NavigationBarSection = (): JSX.Element => {
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
+
+  const handleMobileNavClick = (target: string) => {
+    setOpen(false);
+    setTimeout(() => {
+      scrollTo(target);
+    }, 300);
+  };
 
   return (
     <motion.header
@@ -84,11 +91,18 @@ export const NavigationBarSection = (): JSX.Element => {
       >
         {/* LEFT */}
         <div className="flex min-w-0 items-center gap-6 lg:gap-[61px]">
-          <Image
-            className="h-[35px] w-[177px] shrink-0 object-cover"
-            alt="Deer designer"
-            src={DeerDesigner}
-          />
+          <button
+            type="button"
+            onClick={() => scrollTo("home")}
+            className="shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c49e78]"
+            aria-label="Go to home"
+          >
+            <Image
+              className="h-[35px] w-[177px] object-cover"
+              alt="Deer designer"
+              src={DeerDesigner}
+            />
+          </button>
 
           {/* DESKTOP NAV */}
           <nav aria-label="Primary" className="hidden lg:block">
@@ -131,15 +145,18 @@ export const NavigationBarSection = (): JSX.Element => {
 
           {/* HAMBURGER (mobile only) */}
           <button
+            type="button"
             onClick={() => setOpen(!open)}
-            className="lg:hidden text-ellis-pure-white"
+            className="lg:hidden text-ellis-pure-white p-2 -mr-2 active:opacity-70 transition-opacity"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
           >
-            ☰
+            {open ? "✕" : "☰"}
           </button>
         </div>
       </motion.div>
 
-      {/* FIX 4: Mobile menu wrapped in AnimatePresence for smooth open/close */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -148,44 +165,53 @@ export const NavigationBarSection = (): JSX.Element => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="lg:hidden border-t border-[#c49e7833] px-6 pb-6 overflow-hidden"
+            className="lg:hidden border-t border-[#c49e7833] relative z-50 bg-[#16191f]"
           >
-            <nav aria-label="Mobile Primary">
-              <ul className="flex flex-col gap-4 pt-4">
-                {navItems.map((item) => (
-                  <li key={item.label}>
-                    <motion.button
+            <div className="px-6 pb-6">
+              <nav aria-label="Mobile Primary">
+                <ul className="flex flex-col gap-1 pt-4">
+                  <li>
+                    <button
                       type="button"
-                      onClick={() => {
-                        scrollTo(item.target);
-                        setOpen(false);
-                      }}
-                      className="[font-family:'Aboreto',Helvetica] text-sm font-normal leading-[18.8px] tracking-[1.31px] whitespace-nowrap"
+                      onClick={() => handleMobileNavClick("home")}
+                      className="[font-family:'Aboreto',Helvetica] text-sm font-normal leading-[18.8px] tracking-[1.31px] whitespace-nowrap w-full text-left py-3 px-2 active:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c49e78]"
                       style={{
-                        color:
-                          activeSection === item.target
-                            ? "#c49e78"
-                            : "#fff7f0",
+                        color: activeSection === "" ? "#c49e78" : "#fff7f0",
                       }}
-                      whileHover={{ scale: 1.05, x: 4 }}
-                      transition={{ duration: 0.2 }}
                     >
-                      {item.label}
-                    </motion.button>
+                      HOME
+                    </button>
                   </li>
-                ))}
-              </ul>
-            </nav>
+                  {navItems.map((item) => (
+                    <li key={item.label}>
+                      <button
+                        type="button"
+                        onClick={() => handleMobileNavClick(item.target)}
+                        className="[font-family:'Aboreto',Helvetica] text-sm font-normal leading-[18.8px] tracking-[1.31px] whitespace-nowrap w-full text-left py-3 px-2 active:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#c49e78]"
+                        style={{
+                          color:
+                            activeSection === item.target
+                              ? "#c49e78"
+                              : "#fff7f0",
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-6 w-full h-auto rounded-none border-[#c49e78] bg-transparent px-[16.9px] py-[11.26px] text-ellis-camel-leather hover:bg-[#c49e78]/10 hover:text-ellis-camel-leather"
-            >
-              <span className="[font-family:'Aboreto',Helvetica] text-[15px] font-normal leading-[18.8px] tracking-[1.31px]">
-                SCHEDULE A CONSULTATION
-              </span>
-            </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-6 w-full h-auto rounded-none border-[#c49e78] bg-transparent px-[16.9px] py-[11.26px] text-ellis-camel-leather hover:bg-[#c49e78]/10 hover:text-ellis-camel-leather active:bg-[#c49e78]/20"
+              >
+                <span className="[font-family:'Aboreto',Helvetica] text-[15px] font-normal leading-[18.8px] tracking-[1.31px]">
+                  SCHEDULE A CONSULTATION
+                </span>
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

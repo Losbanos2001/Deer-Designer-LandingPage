@@ -8,6 +8,7 @@ import FamilyLawImage from "../../../../assets/Family-Law.png";
 import { GoArrowRight } from "react-icons/go";
 import VectorLeft from "../../../../assets/Vector-Left.png";
 import VectorRight from "../../../../assets/Vector-Right.png";
+import mobileImage from "../../../../assets/family-pic.jpg";
 
 const heroActions = [
   {
@@ -41,22 +42,38 @@ const fadeUp = {
 export const HeroIntroductionSection = (): JSX.Element => {
   return (
     <section className="relative w-full overflow-hidden bg-[#16191F]">
-      <div className="relative min-h-[693px] w-full">
+      <div className="relative min-h-[693px] w-full flex flex-col lg:block">
 
+        {/* Mobile: Image as separate block */}
         <motion.div
           initial={{ scale: 1.05 }}
           whileInView={{ scale: 1 }}
           viewport={{ once: false }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute inset-0"
+          className="relative w-full h-[300px] lg:hidden"
         >
           <div
-            className="h-full w-full bg-contain bg-no-repeat bg-center sm:bg-cover"
+            className="h-full w-full bg-cover bg-center"
+            style={{ backgroundImage: `url(${mobileImage.src})` }}
+          />
+        </motion.div>
+
+        {/* Desktop: Background image */}
+        <motion.div
+          initial={{ scale: 1.05 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute inset-0 hidden lg:block"
+        >
+          <div
+            className="h-full w-full bg-contain bg-no-repeat bg-center lg:bg-cover"
             style={{ backgroundImage: `url(${FamilyLawImage.src})` }}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,25,31,0.8)_0%,rgba(22,25,31,0.4)_50%,rgba(22,25,31,1)_100%)]" />
         </motion.div>
 
+        {/* Desktop vector decorations */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -85,7 +102,8 @@ export const HeroIntroductionSection = (): JSX.Element => {
           />
         </motion.div>
 
-        <div className="relative z-10 mx-auto flex min-h-[693px] w-full max-w-[1440px] items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
+        {/* Mobile: Card as separate block */}
+        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] items-center justify-center px-4 py-16 sm:px-6 lg:px-8 lg:min-h-[693px] lg:absolute lg:inset-0">
           <motion.div
             variants={container}
             initial="hidden"
@@ -146,6 +164,7 @@ export const HeroIntroductionSection = (): JSX.Element => {
                           key={action.label}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          className="w-full"
                         >
                           <Button
                             type="button"
